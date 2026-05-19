@@ -1,4 +1,3 @@
-// IMPORT OGL SEBAGAI MODULE
 import { Renderer, Program, Mesh, Triangle } from 'https://esm.sh/ogl@0.0.117';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -250,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
+    // Fetch initial config
     fetch('/api/config')
         .then(res => res.json())
         .then(data => {
@@ -388,6 +388,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     configForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        // Since we removed Save Button, form submit handles start directly or we prevent it.
+        // Actually, we can remove this and let the Start Button handle the flow entirely.
+    });
+
+    btnStart.addEventListener('click', (e) => {
+        e.preventDefault();
         const newConfig = {
             token: tokenInput.value,
             guildId: guildSelect.value,
@@ -395,16 +401,16 @@ document.addEventListener('DOMContentLoaded', () => {
             useRpc: useRpcInput.checked
         };
 
-        if(!newConfig.guildId || !newConfig.channelId) {
-             showMessage('Pilih Server dan Channel.', true);
+        if(!newConfig.token || !newConfig.guildId || !newConfig.channelId) {
+             showMessage('Pilih Token, Server dan Channel.', true);
              return;
         }
 
-        const btnSave = document.getElementById('btn-save');
-        const ogText = btnSave.textContent;
-        btnSave.textContent = 'MENYIMPAN...';
-        btnSave.disabled = true;
-
+        btnStart.disabled = true;
+        btnStart.classList.add('opacity-70', 'cursor-wait');
+        startSpinner.classList.remove('hidden');
+        
+        // Auto Save
         fetch('/api/config', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -412,39 +418,37 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(res => res.json())
         .then(data => {
-            btnSave.textContent = ogText;
-            btnSave.disabled = false;
-            if (data.success) showMessage('KONFIGURASI TERSIMPAN!');
+            if (data.success) {
+                // Now Start Bot
+                fetch('/api/bot/start', { method: 'POST' })
+                    .then(r => r.json())
+                    .then(startData => {
+                        btnStart.disabled = false;
+                        btnStart.classList.remove('opacity-70', 'cursor-wait');
+                        startSpinner.classList.add('hidden');
+                        showMessage(startData.message.toUpperCase(), !startData.success);
+                        fetchStatus();
+                    })
+                    .catch(err => {
+                        btnStart.disabled = false;
+                        btnStart.classList.remove('opacity-70', 'cursor-wait');
+                        startSpinner.classList.add('hidden');
+                        showMessage('GAGAL START BOT.', true);
+                    });
+            } else {
+                throw new Error("Gagal Save");
+            }
         })
         .catch(err => {
-            btnSave.textContent = ogText;
-            btnSave.disabled = false;
-            showMessage('GAGAL MENYIMPAN.', true);
+            btnStart.disabled = false;
+            btnStart.classList.remove('opacity-70', 'cursor-wait');
+            startSpinner.classList.add('hidden');
+            showMessage('GAGAL MENYIMPAN KONFIGURASI.', true);
         });
     });
 
-    btnStart.addEventListener('click', () => {
-        btnStart.disabled = true;
-        btnStart.classList.add('opacity-70', 'cursor-wait');
-        startSpinner.classList.remove('hidden');
-        fetch('/api/bot/start', { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                btnStart.disabled = false;
-                btnStart.classList.remove('opacity-70', 'cursor-wait');
-                startSpinner.classList.add('hidden');
-                showMessage(data.message.toUpperCase(), !data.success);
-                fetchStatus();
-            })
-            .catch(err => {
-                btnStart.disabled = false;
-                btnStart.classList.remove('opacity-70', 'cursor-wait');
-                startSpinner.classList.add('hidden');
-                showMessage('GAGAL START BOT.', true);
-            });
-    });
-
-    btnStop.addEventListener('click', () => {
+    btnStop.addEventListener('click', (e) => {
+        e.preventDefault();
         btnStop.disabled = true;
         btnStop.classList.add('opacity-70', 'cursor-wait');
         stopSpinner.classList.remove('hidden');
