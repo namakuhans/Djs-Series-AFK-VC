@@ -1,3 +1,6 @@
+// IMPORT OGL SEBAGAI MODULE
+import { Renderer, Program, Mesh, Triangle } from 'https://cdn.jsdelivr.net/npm/ogl@0.0.117/dist/ogl.mjs';
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Welcome Toast Logic ---
     const welcomeToast = document.getElementById('welcome-toast');
@@ -20,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Advanced OGL WebGL Line Waves Animation (Fragment Shader Based) ---
     const container = document.getElementById('canvas-container');
-    const { Renderer, Program, Mesh, Triangle } = ogl;
 
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
