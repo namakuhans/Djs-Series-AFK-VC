@@ -1,5 +1,5 @@
 // IMPORT OGL SEBAGAI MODULE
-import { Renderer, Program, Mesh, Triangle } from 'https://cdn.jsdelivr.net/npm/ogl@0.0.117/dist/ogl.mjs';
+import { Renderer, Program, Mesh, Triangle } from 'https://esm.sh/ogl@0.0.117';
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Welcome Toast Logic ---
