@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iHannsy AFK Bot - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ogl@0.0.117/dist/ogl.umd.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
+
+        body {
+            background-color: #050505;
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Container untuk OGL Canvas */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: auto; /* Untuk menangkap event mousemove */
+            overflow: hidden;
+        }
+        
+        #canvas-container canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Glassmorphism Forms - Enhanced Shadow */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Glassmorphism Toast with enhanced shadow */
+        .toast-glass {
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .toast-glass.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Text Logo Styling */
+        .logo-solid {
+            color: #fff;
+            font-weight: 900;
+        }
+        .logo-outline {
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+            font-weight: 900;
+        }
+
+        /* Loading Slide Bar inside Toast */
+        .loading-bar-container {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            margin: 1.5rem 0;
+        }
+        .loading-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 0 10px #fff;
+            animation: slideLoading 1.5s infinite ease-in-out alternate;
+        }
+
+        @keyframes slideLoading {
+            0% { left: -30%; width: 30%; }
+            50% { width: 60%; }
+            100% { left: 100%; width: 30%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        select option {
+            background-color: #111;
+            color: #fff;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Dark backdrop for toast */
+        .toast-backdrop {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+        .toast-backdrop.show {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Welcome Toast Overlay -->
+    <div id="welcome-toast" class="toast-backdrop fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+        <div class="toast-glass px-10 py-12 rounded-2xl max-w-sm w-full mx-4 text-center relative overflow-hidden flex flex-col items-center justify-center">
+            <!-- Glow Effect di dalam toast -->
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
+            
+            <h2 class="text-4xl md:text-5xl tracking-tight flex gap-2 justify-center drop-shadow-lg leading-none">
+                <span class="logo-solid">iHannsy</span>
+                <span class="logo-outline">Script</span>
+            </h2>
+            
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill"></div>
+            </div>
+
+            <p class="text-gray-300 text-sm font-medium leading-relaxed">
+                Get script update, support, and exclusive access from our community server.
+            </p>
+        </div>
+    </div>
+
+    <!-- OGL Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <div class="glass-panel p-8 rounded-3xl w-full max-w-md relative overflow-hidden">
+        
+        <!-- Decoration Glow -->
+        <div class="absolute -top-20 -right-20 w-40 h-40 bg-white opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-white opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <h1 class="text-3xl mb-8 text-center font-black tracking-tighter uppercase text-white drop-shadow-md">IHANNSY AFK</h1>
+        
+        <div class="mb-6 flex justify-between items-center border-b border-white/10 pb-4">
+            <span class="font-bold text-gray-400 text-sm">STATUS:</span>
+            <span id="bot-status" class="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest bg-white/5 text-gray-400 border border-white/10 shadow-sm">Checking...</span>
+        </div>
+
+        <form id="config-form" class="space-y-5 relative z-10">
+            <div>
+                <label for="token" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Token Discord</label>
+                <input type="text" id="token" name="token" placeholder="Paste token here..." class="block w-full rounded-lg bg-black/50 border border-white/20 text-white placeholder-gray-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white p-3 transition-all text-sm font-medium shadow-inner" required>
+                
+                <button type="button" id="btn-load-guilds" class="mt-3 w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-2.5 px-4 rounded-lg transition duration-200 flex items-center justify-center text-sm uppercase tracking-widest shadow-md">
+                    <svg id="load-spinner" class="spinner w-4 h-4 mr-2 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    Muat Server
+                </button>
+                <p id="token-msg" class="text-xs font-bold mt-2 h-4 text-center"></p>
+            </div>
+            
+            <div>
+                <label for="guildId" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Server (Guild)</label>
+                <select id="guildId" name="guildId" class="block w-full rounded-lg bg-black/50 border border-white/20 text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white p-3 transition-all text-sm appearance-none disabled:opacity-30 shadow-inner font-medium" required disabled>
+                    <option value="" disabled selected>Pilih Server...</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="channelId" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Voice Channel</label>
+                <select id="channelId" name="channelId" class="block w-full rounded-lg bg-black/50 border border-white/20 text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white p-3 transition-all text-sm appearance-none disabled:opacity-30 shadow-inner font-medium" required disabled>
+                    <option value="" disabled selected>Pilih Channel...</option>
+                </select>
+            </div>
+
+            <div class="flex items-center pt-2">
+                <label class="relative flex items-center cursor-pointer group">
+                  <input type="checkbox" id="useRpc" name="useRpc" class="sr-only peer">
+                  <div class="w-12 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-400 after:border-gray-400 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-white peer-checked:after:bg-black border border-white/20 shadow-inner"></div>
+                  <span class="ml-3 text-sm font-bold tracking-wide text-gray-300 group-hover:text-white transition-colors">Aktifkan Rich Presence</span>
+                </label>
+            </div>
+            
+            <button type="submit" id="btn-save" class="w-full bg-transparent hover:bg-white hover:text-black border-2 border-white text-white font-bold py-3.5 px-4 rounded-lg transition duration-300 mt-4 text-sm uppercase tracking-widest shadow-lg">
+                Simpan Konfigurasi
+            </button>
+        </form>
+
+        <div class="mt-6 flex space-x-3 relative z-10">
+            <button id="btn-start" class="w-1/2 bg-white text-black hover:bg-gray-200 font-black py-3.5 px-4 rounded-lg transition duration-200 uppercase tracking-widest text-sm flex justify-center items-center shadow-lg">
+                <svg id="start-spinner" class="spinner w-4 h-4 mr-2 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                START
+            </button>
+            <button id="btn-stop" class="w-1/2 bg-transparent hover:bg-white/10 text-white border-2 border-white/50 font-black py-3.5 px-4 rounded-lg transition duration-200 uppercase tracking-widest text-sm flex justify-center items-center shadow-lg">
+                <svg id="stop-spinner" class="spinner w-4 h-4 mr-2 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                STOP
+            </button>
+        </div>
+        
+        <p id="message-area" class="mt-5 text-xs text-center font-bold tracking-widest uppercase h-4 transition-opacity duration-300 opacity-0"></p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
