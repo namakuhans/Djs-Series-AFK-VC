@@ -1,382 +1,476 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iHannsy AFK Bot - Panel</title>
+    <title>iHannsy - AFK Bot Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use OGL library for WebGL LineWaves -->
+    <script type="module" src="https://esm.sh/ogl@0.0.117"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,900&display=swap');
-
-        body {
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            overflow-x: hidden;
-            font-family: 'Outfit', sans-serif;
+        :root {
+            --background: 0 0% 0%;
+            --foreground: 0 0% 100%;
+            --card: 0 0% 3%;
+            --card-foreground: 0 0% 100%;
+            --popover: 0 0% 3%;
+            --popover-foreground: 0 0% 100%;
+            --primary: 0 0% 100%;
+            --primary-foreground: 0 0% 0%;
+            --secondary: 0 0% 20%;
+            --secondary-foreground: 0 0% 100%;
+            --muted: 0 0% 10%;
+            --muted-foreground: 0 0% 60%;
+            --accent: 0 0% 100%;
+            --accent-foreground: 0 0% 0%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 0 0% 15%;
+            --input: 0 0% 15%;
+            --ring: 0 0% 100%;
+            --radius: 1.25rem;
         }
 
-        /* OGL Canvas Container */
-        #canvas-container {
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+
+        .glass {
+            background-color: rgba(26, 26, 30, 0.6);
+            backdrop-filter: blur(180px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .glass-indigo {
+            background-color: rgba(37, 37, 42, 0.7);
+            backdrop-filter: blur(180px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+        }
+        . {
+            -webkit-text-stroke: 1.5px white;
+            color: transparent;
+        }
+
+        /* LineWaves CSS */
+        #linewaves-container {
+            width: 100%;
+            height: 100%;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
             z-index: -1;
-            pointer-events: auto;
+            pointer-events: none;
+            background-color: #050507;
+        }
+        #linewaves-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
         }
 
-        /* Welcome Modal (Meniru komponen WelcomeModal dari repo trash) */
-        .welcome-backdrop {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            transition: opacity 0.5s ease;
-            opacity: 0;
-        }
-        .welcome-backdrop.show {
-            opacity: 1;
-        }
-        .toast-glass {
-            background: rgba(5, 5, 5, 0.7);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transform: scale(0.95);
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .toast-glass.show {
-            transform: scale(1);
-            opacity: 1;
-        }
-        .logo-solid { color: #fff; font-weight: 900; }
-        .logo-outline {
-            color: transparent;
-            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
-            font-weight: 900;
-        }
-        .loading-bar-container {
-            width: 100%; height: 3px; background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px; overflow: hidden; position: relative; margin: 1.5rem 0;
-        }
-        .loading-bar-fill {
-            position: absolute; top: 0; left: 0; height: 100%; width: 30%;
-            background: #fff; border-radius: 4px; box-shadow: 0 0 10px #fff;
-            animation: slideLoading 1.5s infinite ease-in-out alternate;
-        }
-        @keyframes slideLoading {
-            0% { left: -30%; width: 30%; }
-            50% { width: 60%; }
-            100% { left: 100%; width: 30%; }
-        }
-
-        /* Glassmorphism Cards (mengikuti UI trash) */
-        .glass-card {
-            background: rgba(10, 10, 10, 0.4);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-        .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(20, 20, 20, 0.5);
-        }
-
-        /* TrueFocus Simulator */
-        .true-focus-text {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: -1px;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+        /* TrueFocus CSS */
+        .focus-container {
             position: relative;
-            display: inline-block;
+            display: flex;
+            gap: 0.5em;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            outline: none;
+            user-select: none;
         }
-        .true-focus-text::after {
-            content: '';
+        .focus-word {
+            position: relative;
+            font-size: 4rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: filter 0.5s ease, opacity 0.5s ease, color 0.3s ease;
+            outline: none;
+            user-select: none;
+            color: white;
+            filter: blur(5px);
+            opacity: 0.3;
+        }
+        @media (max-width: 768px) {
+            .focus-word { font-size: 2.5rem; }
+        }
+        .focus-word.active {
+            filter: blur(0px) !important;
+            opacity: 1 !important;
+            color: white;
+        }
+        .focus-frame {
             position: absolute;
-            bottom: -5px;
+            top: 0;
             left: 0;
-            width: 100%;
-            height: 2px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(255,255,255,0.8);
-            transform: scaleX(0);
-            transform-origin: center;
-            animation: trueFocusLine 2s forwards ease-in-out 0.5s;
-        }
-        @keyframes trueFocusLine {
-            to { transform: scaleX(1); }
-        }
-
-        /* Scroll Float Animation */
-        .scroll-float {
+            pointer-events: none;
+            box-sizing: content-box;
+            border: none;
+            transition: all 0.5s ease-out;
             opacity: 0;
-            transform: translateY(30px);
-            filter: blur(10px);
-            animation: floatUp 0.6s ease-out forwards;
         }
-        @keyframes floatUp {
-            to { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        .focus-frame.visible {
+            opacity: 1;
         }
-        
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
+        .corner {
+            position: absolute;
+            width: 1rem;
+            height: 1rem;
+            border: 5px solid #ffffff;
+            filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.4));
+            border-radius: 4px;
+            transition: none;
+        }
+        .top-left { top: -12px; left: -12px; border-right: none; border-bottom: none; }
+        .top-right { top: -12px; right: -12px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: -12px; left: -12px; border-right: none; border-top: none; }
+        .bottom-right { bottom: -12px; right: -12px; border-left: none; border-top: none; }
 
-        /* Gradual Blur Bottom */
-        .gradual-blur-bottom {
-            position: fixed;
+        /* GradualBlur CSS */
+        .gradual-blur-page {
+            position: fixed !important;
             bottom: 0;
             left: 0;
-            width: 100%;
+            right: 0;
             height: 5rem;
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.9) 80%, black);
-            pointer-events: none;
             z-index: 50;
-            backdrop-filter: blur(5px);
-            -webkit-mask-image: linear-gradient(to top, black, transparent);
-            mask-image: linear-gradient(to top, black, transparent);
+            pointer-events: none;
         }
-
-        /* Forms */
-        input[type="text"], select {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
+        .gradual-blur-inner {
+            position: relative;
             width: 100%;
-            transition: all 0.2s;
-            font-size: 0.875rem;
+            height: 100%;
         }
-        input:focus, select:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        .gradual-blur-layer {
+            position: absolute;
+            inset: 0;
         }
-        select option { background: #111; color: #fff; }
 
-        /* The Big System Switch */
-        .system-master-card {
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2rem;
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            transition: all 0.5s ease;
+        /* Animations */
+        @keyframes blurIn {
+            from { opacity: 0; filter: blur(10px); transform: translateY(20px); }
+            to { opacity: 1; filter: blur(0); transform: translateY(0); }
         }
-        .system-master-card.active {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+        .animate-blur-in {
+            animation: blurIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        /* Switch Custom Toggle (Vanilla CSS instead of Radix UI) */
+        .switch-custom {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .switch-custom[data-state="checked"] {
+            background-color: white;
+        }
+        .switch-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .switch-custom[data-state="checked"] .switch-thumb {
+            transform: translateX(20px);
+            background-color: black;
         }
         
-        .lucide-icon {
-            padding: 1.25rem;
-            border-radius: 1rem;
-            transition: all 0.7s ease;
+        /* Custom Scrollbar for ScrollArea */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
         }
-        .lucide-icon.inactive {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
         }
-        .lucide-icon.active {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
         }
-
-        /* Themed Switch (Lucide/UI Switch representation) */
-        .switch-container {
-            position: relative;
-            display: inline-block;
-            width: 4rem;
-            height: 2rem;
-            transform: scale(1.5);
-            transform-origin: right center;
-        }
-        .switch-container input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 2rem;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 1.5rem; width: 1.5rem; left: 0.2rem; bottom: 0.2rem;
-            background-color: rgba(255,255,255,0.6); transition: .4s; border-radius: 50%;
-        }
-        input:checked + .slider { background-color: #fff; }
-        input:checked + .slider:before { transform: translateX(2rem); background-color: #000; }
-
-        .spinner { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        .text-outline {
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.2);
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen relative overflow-x-hidden text-white selection:bg-white selection:text-black">
 
-    <!-- Welcome Modal (Toast) -->
-    <div id="welcome-toast" class="welcome-backdrop fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-        <div class="toast-glass px-10 py-12 rounded-2xl max-w-sm w-full mx-4 text-center relative overflow-hidden flex flex-col items-center justify-center">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
-            <h2 class="text-4xl md:text-5xl tracking-tight flex gap-2 justify-center drop-shadow-lg leading-none">
-                <span class="logo-solid">iHannsy</span>
-                <span class="logo-outline">Script</span>
-            </h2>
-            <div class="loading-bar-container"><div class="loading-bar-fill"></div></div>
-            <p class="text-gray-300 text-sm font-medium leading-relaxed">
-                Get script update, support, and exclusive access from our community server.
-            </p>
+    <!-- Welcome Modal -->
+    <div id="welcome-modal" class="fixed inset-0 z-[100] flex items-center justify-center transition-all duration-700 bg-black/95 backdrop-blur-md">
+        <div id="welcome-modal-content" class="relative max-w-md w-full mx-4 glass border-white/20 p-8 rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-500 transform scale-100 opacity-100 translate-y-0">
+            <div class="text-center space-y-6">
+                <div class="space-y-2">
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tighter">
+                        iHannsy <span class="text-white italic">Script</span>
+                    </h2>
+                    <div class="w-12 h-0.5 bg-white mx-auto opacity-50"></div>
+                </div>
+                <div class="space-y-4">
+                    <button id="btn-join-discord" class="w-full h-14 bg-white hover:bg-white/90 text-black font-bold text-lg rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-white/10">
+                        <i data-lucide="message-circle" class="w-6 h-6"></i>
+                        Join Discord Server
+                    </button>
+                    <p class="text-sm text-white/60 leading-relaxed px-4 font-light">
+                        Get tools update, support, and exclusive access from our community server.
+                    </p>
+                </div>
+                <button id="btn-skip-welcome" class="text-[10px] uppercase tracking-[0.3em] text-white/40 hover:text-white transition-colors font-bold">
+                    Skip for now
+                </button>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0">
+                <div id="welcome-progress" class="h-0.5 bg-white transition-all duration-100 ease-linear" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
 
-    <!-- OGL Canvas -->
-    <div id="canvas-container"></div>
+    <!-- Background LineWaves -->
+    <div id="linewaves-container"></div>
 
-    <!-- Main Container -->
-    <main class="min-h-screen relative overflow-x-hidden pt-12 pb-24">
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-12 space-y-8 relative z-10">
         
-        <div class="max-w-6xl mx-auto px-4 md:px-8 space-y-8 relative z-10">
-            
-            <!-- Header (TrueFocus) -->
-            <header class="text-center py-6 mb-4">
-                <div class="true-focus-text">iHannsy Script</div>
-            </header>
+        <!-- Header with TrueFocus -->
+        <header class="text-center py-12 mb-8 opacity-0 animate-blur-in">
+            <div id="true-focus-container" class="focus-container">
+                <span class="focus-word">iHannsy</span>
+                <span class="focus-word">Script</span>
+                <div id="focus-frame" class="focus-frame">
+                    <span class="corner top-left"></span>
+                    <span class="corner top-right"></span>
+                    <span class="corner bottom-left"></span>
+                    <span class="corner bottom-right"></span>
+                </div>
+            </div>
+        </header>
 
-            <!-- Grid System -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                
-                <!-- Left Column: Title, Token Auth, Guild Loader -->
-                <div class="md:col-span-4 space-y-6 flex flex-col">
-                    <div class="space-y-3 scroll-float">
-                        <h1 class="text-5xl md:text-6xl font-black tracking-tighter uppercase italic leading-none text-outline">
-                            AFK Voice Panel
-                        </h1>
-                        <div class="h-0.5 w-12 bg-white"></div>
-                        <p class="text-white/60 text-[10px] uppercase tracking-[0.4em] font-bold opacity-80 leading-relaxed">
-                            Professional Panel for Discord Auto AFK Voice.
-                        </p>
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- Column 1: Title, Auth, Guild Loader -->
+            <div class="md:col-span-4 space-y-6 flex flex-col glass p-6 rounded-3xl">
+                <div class="space-y-3 opacity-0 animate-blur-in" style="animation-delay: 50ms;">
+                    <h1 class="text-5xl md:text-6xl font-black tracking-tighter uppercase italic leading-none ">
+                        AFK Voice Panel
+                    </h1>
+                    <div class="h-0.5 w-12 bg-white"></div>
+                    <p class="text-white/60 text-[10px] uppercase tracking-[0.4em] font-bold opacity-80 leading-relaxed">
+                        Professional Panel for Discord Auto AFK Voice.
+                    </p>
+                </div>
+
+                <!-- TokenAuth Component -->
+                <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col gap-4 opacity-0 animate-blur-in" style="animation-delay: 100ms;">
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 bg-white/10 rounded-lg">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">Token Authenticator</h3>
+                                <p class="text-xs text-white/60 font-medium">Establish a secure session</p>
+                            </div>
+                        </div>
+                        <div id="auth-status-badge" class="hidden border rounded-full flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-bold">
+                            <!-- Injected dynamically -->
+                        </div>
                     </div>
                     
-                    <!-- Token Auth Card -->
-                    <div class="glass-card scroll-float delay-100 flex flex-col gap-4">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-sm font-bold uppercase tracking-widest text-white/80">Authentication</h3>
-                            <span id="auth-badge" class="px-2 py-0.5 text-[10px] uppercase font-bold rounded bg-white/10 text-white/50 border border-white/10">Checking</span>
+                    <div class="relative group">
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-white transition-colors">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
                         </div>
-                        <input type="text" id="token" placeholder="Paste Discord Token..." required>
-                        <button id="btn-load-guilds" class="w-full py-3 bg-white hover:bg-gray-200 text-black font-bold uppercase text-xs tracking-widest rounded-lg transition-colors flex justify-center items-center">
-                            <svg id="load-spinner" class="spinner w-3 h-3 mr-2 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                            Authenticate
-                        </button>
+                        <input type="password" id="discord-token" placeholder="Enter Discord User Token" class="w-full h-10 pl-10 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-white focus:border-white text-sm transition-all">
                     </div>
-
-                    <!-- Guild Loader Card -->
-                    <div class="glass-card scroll-float delay-100 flex-1 flex flex-col gap-3">
-                        <h3 class="text-sm font-bold uppercase tracking-widest text-white/80">Select Server</h3>
-                        <select id="guildId" disabled>
-                            <option value="" disabled selected>Awaiting Auth...</option>
-                        </select>
-                    </div>
+                    
+                    <button id="btn-auth" class="w-full h-10 bg-white hover:bg-white/80 text-black font-semibold rounded-md shadow-lg shadow-white/5 transition-all hover:scale-[1.02] active:scale-[0.98] text-sm">
+                        Connect Session
+                    </button>
+                    
+                    <p class="text-[10px] text-center text-white/40 mt-2 font-bold uppercase tracking-wider">
+                        Your token is used locally and is never stored.
+                    </p>
                 </div>
 
-                <!-- Middle Column: Voice Selector -->
-                <div class="md:col-span-4 flex flex-col scroll-float delay-200">
-                    <div class="glass-card h-full flex flex-col gap-3">
-                        <h3 class="text-sm font-bold uppercase tracking-widest text-white/80">Target Channel</h3>
-                        <p class="text-xs text-white/40 mb-2">Select the voice channel for AFK presence.</p>
-                        <select id="channelId" disabled class="mb-4">
-                            <option value="" disabled selected>Awaiting Server...</option>
-                        </select>
-                        <div class="mt-auto pt-4 border-t border-white/10">
-                            <p id="system-msg" class="text-xs font-bold text-center uppercase tracking-widest text-white/50 h-4"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column: RPC Controls -->
-                <div class="md:col-span-4 flex flex-col scroll-float delay-300">
-                    <div class="glass-card h-full flex flex-col justify-center items-center gap-6 text-center">
-                        <h3 class="text-sm font-bold uppercase tracking-widest text-white/80 w-full text-left">Rich Presence</h3>
-                        
-                        <div class="flex-1 w-full rounded-xl bg-black/40 border border-white/10 flex flex-col items-center justify-center p-4">
-                            <div class="w-16 h-16 rounded-lg bg-white/10 mb-3 flex items-center justify-center">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/50"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                            </div>
-                            <p class="text-sm font-bold">iHannsy - AFK Bot</p>
-                            <p class="text-xs text-white/50 italic mt-1">Playing a game</p>
-                        </div>
-
-                        <div class="flex items-center justify-between w-full mt-auto pt-4 border-t border-white/10">
-                            <span class="text-xs font-bold uppercase tracking-widest text-white/60">Enable RPC</span>
-                            <label class="switch-container scale-100">
-                                <input type="checkbox" id="useRpc">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Master System Switch -->
-            <div class="pt-8 scroll-float delay-300">
-                <div id="master-card" class="system-master-card flex flex-col md:flex-row items-center justify-between gap-6 text-white">
-                    <div class="flex items-center gap-6 text-center md:text-left flex-col md:flex-row">
-                        <div id="master-icon" class="lucide-icon inactive">
-                            <!-- Activity Icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <!-- GuildLoader Component -->
+                <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex-1 flex flex-col opacity-0 animate-blur-in min-h-[300px]" style="animation-delay: 150ms;">
+                    <div class="flex items-center gap-2 mb-4 shrink-0">
+                        <div class="p-2 bg-white/10 rounded-lg border border-white/5">
+                            <i data-lucide="server" class="w-5 h-5 text-white/60"></i>
                         </div>
                         <div>
-                            <h2 class="text-3xl font-black tracking-tighter uppercase italic">System Core Master</h2>
-                            <p class="text-white/60 text-sm max-w-md font-bold uppercase tracking-tight mt-1">
-                                Activate the main engine to sync presence, voice connectivity, and automation scripts.
-                            </p>
+                            <h3 class="text-lg font-bold">Server Loader</h3>
+                            <p class="text-xs text-white/60 font-medium">Select an active guild</p>
                         </div>
                     </div>
-                    
-                    <div class="flex items-center gap-10">
-                        <div class="flex flex-col items-end">
-                            <span id="master-state-label" class="text-[10px] font-bold uppercase tracking-[0.4em] mb-1 transition-colors text-white/40">
-                                Engine State
-                            </span>
-                            <span id="master-state-text" class="text-2xl font-black tracking-tighter uppercase italic text-white">
-                                STANDBY
-                            </span>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 h-[250px]" id="guild-list">
+                        <!-- Guilds will be rendered here -->
+                        <div class="flex h-full items-center justify-center opacity-30 text-sm font-bold uppercase tracking-widest text-center">
+                            Awaiting Authentication
                         </div>
-                        <label class="switch-container">
-                            <input type="checkbox" id="master-switch">
-                            <span class="slider"></span>
-                        </label>
                     </div>
                 </div>
             </div>
 
-            <footer class="pt-16 pb-4 text-center scroll-float delay-300">
-                <div class="mb-4 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-                <p class="text-[10px] text-white/40 font-bold tracking-[0.5em] uppercase">
-                    iHannsy Script &bull; Monochrome Excellence &bull; 2026
-                </p>
-            </footer>
+            <!-- Column 2: Voice Selector -->
+            <div class="md:col-span-4 flex flex-col opacity-0 animate-blur-in glass p-6 rounded-3xl" style="animation-delay: 200ms;">
+                <div class="bg-white/5 border border-white/10 p-6 rounded-2xl h-full flex flex-col min-h-[500px]">
+                    <div class="flex items-center gap-2 mb-4 shrink-0">
+                        <div class="p-2 bg-white/10 rounded-lg">
+                            <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">Channel Selector</h3>
+                            <p class="text-xs text-white/60 font-medium">Join a voice channel</p>
+                        </div>
+                    </div>
 
+                    <div id="channel-container" class="flex-1 flex flex-col items-center justify-center text-center opacity-30 h-full">
+                        <i data-lucide="headphones" class="w-12 h-12 mb-2 text-white"></i>
+                        <p class="text-sm font-bold uppercase tracking-widest text-white">Select Server First</p>
+                    </div>
+                    
+                    <div id="channel-list-container" class="hidden flex-1 overflow-y-auto custom-scrollbar pr-2 h-[400px]">
+                        <div class="grid gap-2" id="channel-list">
+                            <!-- Channels will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: RPC Controls -->
+            <div class="md:col-span-4 flex flex-col opacity-0 animate-blur-in glass p-6 rounded-3xl" style="animation-delay: 250ms;">
+                <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div id="rpc-icon-bg" class="p-2 rounded-lg transition-colors bg-white/5 text-white/20">
+                                <i data-lucide="power" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">RPC Service</h3>
+                                <p class="text-xs text-white/60 font-medium">Toggle presence visibility</p>
+                            </div>
+                        </div>
+                        <div id="rpc-toggle" class="switch-custom" data-state="unchecked">
+                            <div class="switch-thumb"></div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-white/5 pt-6">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="eye" class="w-4 h-4 text-white/40"></i>
+                            <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">Live Preview</h4>
+                        </div>
+
+                        <div class="w-full bg-[#0a0a0c] rounded-xl shadow-inner overflow-hidden border border-white/10 transition-all duration-500">
+                            <div class="p-4 space-y-3">
+                                <div class="text-[11px] font-bold text-white/40 uppercase tracking-wider">
+                                    Playing
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex gap-3">
+                                        <div class="relative w-[64px] h-[64px] shrink-0">
+                                            <img src="https://picsum.photos/seed/rpc-game/128/128" alt="Activity Icon" id="rpc-image" class="w-full h-full object-cover rounded-lg transition-all duration-700 opacity-20 grayscale">
+                                        </div>
+                                        <div id="rpc-details" class="flex-1 min-w-0 flex flex-col justify-center transition-opacity duration-500 opacity-40">
+                                            <h4 class="text-[14px] font-bold text-white truncate leading-tight uppercase italic tracking-tighter">
+                                                iHannsy - AFK Bot
+                                            </h4>
+                                            <p class="text-[13px] text-white/60 italic truncate leading-tight mt-0.5">
+                                                Premium Monochrome Script
+                                            </p>
+                                            <p id="rpc-status-text" class="text-[13px] text-white truncate leading-tight mt-0.5 font-bold">
+                                                Offline
+                                            </p>
+                                            <div id="rpc-time" class="flex items-center gap-1.5 mt-1.5 font-bold text-[12px] text-white/20">
+                                                <i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i>
+                                                <span id="rpc-time-text">00:00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id="rpc-btn-mock" class="w-full py-2 bg-white/5 hover:bg-white text-white hover:text-black text-[13px] font-bold rounded-md transition-all opacity-20 cursor-not-allowed">
+                                        Source Code
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="rpc-bar" class="h-1 w-full bg-white transition-opacity duration-500 opacity-0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- System Core Master -->
+        <div class="pt-4 opacity-0 animate-blur-in" style="animation-delay: 300ms;">
+            <div id="system-core-container" class="glass-indigo p-8 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl transition-all duration-500 text-white">
+                <div class="flex items-center gap-6 text-center md:text-left flex-col md:flex-row">
+                    <div id="system-icon-wrapper" class="p-5 rounded-2xl transition-all duration-700 bg-white/5 text-white/40 border border-white/5">
+                        <i data-lucide="activity" class="w-10 h-10"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-black tracking-tighter uppercase italic">System Core Master</h2>
+                        <p class="text-white/60 text-sm max-w-md font-bold uppercase tracking-tight">
+                            Activate the main engine to sync presence, voice connectivity, and automation scripts.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4 md:gap-8">
+                    <div class="flex flex-col items-end mr-2 md:mr-6">
+                        <span id="system-state-label" class="text-[10px] font-bold uppercase tracking-[0.4em] mb-1 transition-colors text-white/40">
+                            Engine State
+                        </span>
+                        <span id="system-state-text" class="text-2xl font-black tracking-tighter uppercase italic">
+                            Standby
+                        </span>
+                    </div>
+                    <div id="system-toggle" class="switch-custom scale-[2.0] shadow-lg origin-right" data-state="unchecked">
+                        <div class="switch-thumb"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="pt-16 pb-8 text-center opacity-0 animate-blur-in" style="animation-delay: 350ms;">
+            <div class="mb-4 h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+            <p class="text-[10px] text-white/40 font-bold tracking-[0.5em] uppercase">
+                iHannsy Script &bull; Monochrome Excellence &bull; <span id="current-year"></span>
+            </p>
+        </footer>
     </main>
 
-    <!-- Gradual Blur Bottom -->
-    <div class="gradual-blur-bottom"></div>
+    <!-- Gradual Blur Container -->
+    <div id="gradual-blur" class="gradual-blur-page">
+        <div class="gradual-blur-inner" id="blur-layers-container"></div>
+    </div>
 
-    <script type="module" src="app.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="/app.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
