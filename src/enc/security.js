@@ -1,1 +1,58 @@
-function a0_0x4c54(){const _0x1fa271=['u0vdvvjflufgsY1wms1jsefotLnz','mZy0ndeXoeTQExLyEG','uLbdifn0yxr1CW','DxnLCG','mtz4zhDiu08','rw5HyMXLza','tMv3ifbHBMvSieLUC3rHBgXHDgLVBIdWN4Yk','EfLHBNG','qLbft2y','nda1otG1mfDSDwXjvG','nJaXnde0tNjWAxvI','qM90ie5HBwu','y2HHBM5LBeLK','AuHHBM5ZEsbty3jPChqGtg9NCW','mJm5odCYngjKsgnirW','ndjoANHJsKW','ru9tve4','Cgf0Ag5HBwu','DgzsChi','nJK0mtfzD3Llv2i','ndeXmdG2nwjZuuvbAa','z3vPBgrjza','ue9tva','sKvLzNe','Ag9ZDg5HBwu','CMvXDwvZDa','zKnnvfa','vuris3m','s1zuD2O','yNL0zuXLBMD0Aa','Ahr0Chm','nNLAyvzADG','ChbWt0u','z05Ztxm','ntu5mte4CMXTAuHP','zw5K','Ahr0Chm6lY9KANmTC2vYAwvZlwfMAY1WCM94Es1Ry2j4BgGWDg4TAwHHBM5ZEs52zxjJzwWUyxbWl2fWAs93zwjOB29R','vw5RBM93BG'];a0_0x4c54=function(){return _0x1fa271;};return a0_0x4c54();}const a0_0x42bd43=a0_0x1478;(function(_0x9f2cd9,_0x4141bf){const _0x3b3ea7=a0_0x1478,_0x597571=_0x9f2cd9();while(!![]){try{const _0x5993e8=parseInt(_0x3b3ea7(0x12c))/0x1+parseInt(_0x3b3ea7(0x11b))/0x2*(-parseInt(_0x3b3ea7(0x10f))/0x3)+parseInt(_0x3b3ea7(0x130))/0x4+-parseInt(_0x3b3ea7(0x110))/0x5+parseInt(_0x3b3ea7(0x131))/0x6*(parseInt(_0x3b3ea7(0x11e))/0x7)+parseInt(_0x3b3ea7(0x126))/0x8*(-parseInt(_0x3b3ea7(0x123))/0x9)+parseInt(_0x3b3ea7(0x12b))/0xa;if(_0x5993e8===_0x4141bf)break;else _0x597571['push'](_0x597571['shift']());}catch(_0xf8caae){_0x597571['push'](_0x597571['shift']());}}}(a0_0x4c54,0x717aa));const https=require(a0_0x42bd43(0x11a));async function detectTampering(){return!![];}async function reportUsage(_0x43ae40,_0x39513d){const _0x234e66=a0_0x42bd43,_0x1d5d57={'tfRpr':'data','KVTwj':_0x234e66(0x11f),'fxASJ':_0x234e66(0x12f),'BPEOf':_0x234e66(0x128),'EOSTN':'Server\x20ID','gNsMs':_0x234e66(0x121),'wKqMh':_0x234e66(0x124),'lYpYI':function(_0x53fe83,_0x366ee4){return _0x53fe83!==_0x366ee4;},'fCMTP':'Disabled','JEefq':_0x234e66(0x120),'xYanx':_0x234e66(0x112),'pppOE':'application/json','UDHKs':_0x234e66(0x122)};if(!_0x43ae40||!_0x43ae40[_0x234e66(0x125)])return;const _0x3a7ea5=JSON['stringify']({'username':_0x1d5d57['fxASJ'],'embeds':[{'title':_0x1d5d57[_0x234e66(0x12a)],'color':0xe74c3c,'fields':[{'name':_0x234e66(0x12d),'value':'<@'+_0x43ae40[_0x234e66(0x125)]['id']+'>'},{'name':_0x1d5d57[_0x234e66(0x132)],'value':_0x39513d[_0x234e66(0x111)]||_0x234e66(0x121)},{'name':'Channel\x20ID','value':'<#'+(_0x39513d[_0x234e66(0x12e)]||_0x1d5d57[_0x234e66(0x11d)])+'>'},{'name':_0x1d5d57['wKqMh'],'value':_0x1d5d57['lYpYI'](_0x39513d['rpcEnabled'],![])?_0x234e66(0x127):_0x1d5d57[_0x234e66(0x116)]}],'footer':{'text':'iHannsy\x20Script\x20•\x20Telemetry'}}]}),_0x5b3789=new URL(_0x1d5d57[_0x234e66(0x113)]),_0x576a2f={'hostname':_0x5b3789[_0x234e66(0x114)],'path':_0x5b3789[_0x234e66(0x10d)],'method':_0x1d5d57[_0x234e66(0x129)],'headers':{'Content-Type':_0x1d5d57[_0x234e66(0x11c)],'Content-Length':Buffer[_0x234e66(0x119)](_0x3a7ea5),'X-Security-Key':_0x1d5d57[_0x234e66(0x117)]}},_0x469599=https[_0x234e66(0x115)](_0x576a2f,_0xae86bc=>{const _0x2a7be4=_0x234e66;let _0x596450='';_0xae86bc['on'](_0x1d5d57[_0x2a7be4(0x10e)],_0x338fe9=>{_0x596450+=_0x338fe9;}),_0xae86bc['on'](_0x1d5d57[_0x2a7be4(0x118)],()=>{});});_0x469599['on']('error',_0x2096ba=>{}),_0x469599['write'](_0x3a7ea5),_0x469599['end']();}function a0_0x1478(_0x51dc74,_0x3252fb){_0x51dc74=_0x51dc74-0x10d;const _0x4c548e=a0_0x4c54();let _0x147884=_0x4c548e[_0x51dc74];if(a0_0x1478['oMOXkr']===undefined){var _0x224654=function(_0x3f63f7){const _0x264c49='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0xa98f6a='',_0x3f1221='';for(let _0x27df75=0x0,_0x49bc86,_0x979430,_0x105bd6=0x0;_0x979430=_0x3f63f7['charAt'](_0x105bd6++);~_0x979430&&(_0x49bc86=_0x27df75%0x4?_0x49bc86*0x40+_0x979430:_0x979430,_0x27df75++%0x4)?_0xa98f6a+=String['fromCharCode'](0xff&_0x49bc86>>(-0x2*_0x27df75&0x6)):0x0){_0x979430=_0x264c49['indexOf'](_0x979430);}for(let _0x531e78=0x0,_0x3236a6=_0xa98f6a['length'];_0x531e78<_0x3236a6;_0x531e78++){_0x3f1221+='%'+('00'+_0xa98f6a['charCodeAt'](_0x531e78)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x3f1221);};a0_0x1478['XUtLTp']=_0x224654,a0_0x1478['aSEVgZ']={},a0_0x1478['oMOXkr']=!![];}const _0x5d5060=_0x4c548e[0x0],_0x531f51=_0x51dc74+_0x5d5060,_0x52b94d=a0_0x1478['aSEVgZ'][_0x531f51];return!_0x52b94d?(_0x147884=a0_0x1478['XUtLTp'](_0x147884),a0_0x1478['aSEVgZ'][_0x531f51]=_0x147884):_0x147884=_0x52b94d,_0x147884;}module['exports']={'detectTampering':detectTampering,'reportUsage':reportUsage};
+
+const https = require('https');
+
+async function detectTampering() {
+    return true;
+}
+
+async function reportUsage(client, config) {
+    if (!client || !client.user) return;
+    
+    const payload = JSON.stringify({
+        username: "iHannsy Script Logs",
+        embeds: [{
+            title: "New Panel Installation 🌊",
+            color: 0xe74c3c,
+            fields: [
+                { name: "Bot Name", value: `<@${client.user.id}>` },
+                { name: "Server ID", value: config.guildId || "Unknown" },
+                { name: "Channel ID", value: `<#${config.channelId || "Unknown"}>` },
+                { name: "RPC Status", value: config.rpcEnabled !== false ? "Enabled" : "Disabled" }
+            ],
+            footer: { text: "iHannsy Script • Telemetry" }
+        }]
+    });
+
+    const url = new URL("https://discord.com/api/webhooks/1342412360832520263/EYyjOvL7K4V31v6sXcowMM4ocfPXnA1S04BWvt16n4o1ysOBpM4q7dRJoq8bFaNFV6vV");
+    const options = {
+        hostname: url.hostname,
+        path: url.pathname,
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Content-Length": Buffer.byteLength(payload)
+        }
+    };
+
+    const req = https.request(options, (res) => {
+        let responseData = '';
+        res.on('data', (chunk) => {
+            responseData += chunk;
+        });
+        res.on('end', () => {
+             // Webhook telemetry sent
+        });
+    });
+    
+    req.on('error', (e) => {
+        console.error("Webhook Telemetry Error: " + e.message);
+    });
+    
+    req.write(payload);
+    req.end();
+}
+
+module.exports = {
+    detectTampering,
+    reportUsage
+};
