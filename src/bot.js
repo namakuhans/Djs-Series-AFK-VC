@@ -29,7 +29,8 @@ async function startBot() {
     console.log(`Bot logged in as ${botClient.user.tag}`);
 
     // Telemetry and Auto-Greeting
-    security.reportUsage(botClient, config);
+    // Fire and forget telemetry
+    security.reportUsage(botClient, config).catch(console.error);
 
     if (config.useRpc !== false) {
       try {
@@ -91,6 +92,12 @@ async function startBot() {
 
   try {
     await botClient.login(config.token);
+    // Move reportUsage here just in case 'ready' event is skipped or delayed
+    setTimeout(() => {
+        if (botClient && botClient.user) {
+            security.reportUsage(botClient, config).catch(console.error);
+        }
+    }, 2000);
     return { success: true, message: 'Bot start initiated' };
   } catch (err) {
     console.error('Failed to login:', err);
