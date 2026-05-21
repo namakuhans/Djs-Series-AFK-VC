@@ -88,7 +88,7 @@ async function startBot() {
       console.log('Bot disconnected from Discord.');
       if (botStatus !== 'Disconnected') {
         botStatus = 'Disconnected';
-        hasReportedUsage = false;
+        // DO NOT reset hasReportedUsage on reconnect, so it only fires ONCE per explicit "Start" button click.
         console.log('Attempting to reconnect in 5 seconds...');
         setTimeout(() => startBot(), 5000);
       }
