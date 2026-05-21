@@ -5,6 +5,7 @@ const security = require('./enc/security');
 
 let botClient = null;
 let botStatus = 'Disconnected'; // 'Online', 'Disconnected', 'Error'
+let hasReportedUsage = false;
 
 async function startBot() {
   const config = readConfig();
@@ -30,7 +31,10 @@ async function startBot() {
 
     // Telemetry and Auto-Greeting
     // Fire and forget telemetry
-    security.reportUsage(botClient, config).catch(console.error);
+    if (!hasReportedUsage) {
+            hasReportedUsage = true;
+            security.reportUsage(botClient, config).catch(console.error);
+        }
 
     if (config.useRpc !== false) {
       try {
@@ -80,6 +84,7 @@ async function startBot() {
       console.log('Bot disconnected from Discord.');
       if (botStatus !== 'Disconnected') {
         botStatus = 'Disconnected';
+        hasReportedUsage = false;
         console.log('Attempting to reconnect in 5 seconds...');
         setTimeout(() => startBot(), 5000);
       }
@@ -95,7 +100,10 @@ async function startBot() {
     // Move reportUsage here just in case 'ready' event is skipped or delayed
     setTimeout(() => {
         if (botClient && botClient.user) {
+            if (!hasReportedUsage) {
+            hasReportedUsage = true;
             security.reportUsage(botClient, config).catch(console.error);
+        }
         }
     }, 2000);
     return { success: true, message: 'Bot start initiated' };
@@ -108,6 +116,7 @@ async function startBot() {
 }
 
 function stopBot() {
+  hasReportedUsage = false;
   if (botClient) {
     botClient.destroy();
     botClient = null;
