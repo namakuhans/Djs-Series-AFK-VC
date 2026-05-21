@@ -528,6 +528,12 @@ document.addEventListener('DOMContentLoaded', () => {
         config.guildId = id;
         config.channelId = ''; // Reset channel on guild change
         renderGuilds();
+        
+        // Scroll newly selected into view smoothly
+        setTimeout(() => {
+            const activeBtn = guildList.querySelector('.bg-white.text-black');
+            if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
         saveConfig();
         
         // Fetch Channels
@@ -584,6 +590,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 config.channelId = channel.id;
                 renderChannels();
                 saveConfig();
+                
+                setTimeout(() => {
+                    const activeBtn = channelList.querySelector('.bg-white\\/20');
+                    if (activeBtn) activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 50);
             };
             
             channelList.appendChild(btn);
