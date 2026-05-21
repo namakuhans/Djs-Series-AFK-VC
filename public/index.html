@@ -199,9 +199,8 @@
         }
         
         /* Custom Scrollbar for ScrollArea */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
+        .custom-scrollbar { scroll-behavior: smooth; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: transparent;
         }
@@ -323,7 +322,7 @@
                             <p class="text-xs text-white/60 font-medium">Select an active guild</p>
                         </div>
                     </div>
-                    <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 h-[250px]" id="guild-list">
+                    <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 max-h-[370px] scroll-smooth" id="guild-list">
                         <!-- Guilds will be rendered here -->
                         <div class="flex h-full items-center justify-center opacity-30 text-sm font-bold uppercase tracking-widest text-center">
                             Awaiting Authentication
@@ -350,7 +349,7 @@
                         <p class="text-sm font-bold uppercase tracking-widest text-white">Select Server First</p>
                     </div>
                     
-                    <div id="channel-list-container" class="hidden flex-1 overflow-y-auto custom-scrollbar pr-2 h-[400px]">
+                    <div id="channel-list-container" class="hidden flex-1 overflow-y-auto custom-scrollbar pr-2 max-h-[270px] scroll-smooth">
                         <div class="grid gap-2" id="channel-list">
                             <!-- Channels will be rendered here -->
                         </div>
