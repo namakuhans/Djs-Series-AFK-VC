@@ -407,8 +407,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUIFromConfig() {
         if (config.token) {
             discordTokenInput.value = config.token;
-            // Auto authenticate if token exists
-            authenticateToken(config.token);
+            // Only auto-authenticate if it doesn't look like a masked token
+            if (!config.token.includes('***HIDDEN***') && !config.token.includes('...')) {
+                authenticateToken(config.token);
+            }
         }
 
         setRpcUI(config.rpcEnabled);

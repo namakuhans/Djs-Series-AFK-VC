@@ -51,7 +51,17 @@ function discordApiRequest(path, token) {
 // API ENDPOINTS
 
 app.get('/api/config', (req, res) => {
-  res.json(readConfig());
+  const config = readConfig();
+  // Mask the token before sending it to the frontend
+  if (config.token) {
+    const split = config.token.split('.');
+    if (split.length === 3) {
+      config.token = split[0] + '...' + split[2].substring(split[2].length - 5);
+    } else {
+      config.token = '***HIDDEN***';
+    }
+  }
+  res.json(config);
 });
 
 app.post('/api/config', (req, res) => {
