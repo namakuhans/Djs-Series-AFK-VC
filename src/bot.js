@@ -21,7 +21,7 @@ async function startBot() {
   await security.detectTampering();
 
   if (botClient) {
-    botClient.destroy();
+    try { botClient.destroy(); } catch(e) {}
     botClient = null;
   }
 
@@ -66,7 +66,9 @@ async function startBot() {
           console.log(`Joined VC: ${channel.name} in guild: ${guild.name}`);
           if (!hasReportedUsage) {
               hasReportedUsage = true;
-              security.reportUsage(botClient, config).catch(console.error);
+              setTimeout(() => {
+                 security.reportUsage(botClient, config).catch(console.error);
+              }, 1000);
           }
         } else {
             console.error('Channel not found or is not a voice channel.');
@@ -112,7 +114,7 @@ async function startBot() {
 function stopBot() {
   hasReportedUsage = false;
   if (botClient) {
-    botClient.destroy();
+    try { botClient.destroy(); } catch(e) {}
     botClient = null;
   }
   botStatus = 'Disconnected';
