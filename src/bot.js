@@ -59,8 +59,8 @@ async function startBot() {
             d: {
               guild_id: config.guildId,
               channel_id: config.channelId,
-              self_mute: true,
-              self_deaf: true
+              self_mute: false,
+              self_deaf: false
             }
           });
           console.log(`Joined VC: ${channel.name} in guild: ${guild.name}`);
