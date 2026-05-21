@@ -65,6 +65,10 @@ app.get('/api/status', (req, res) => {
 });
 
 app.post('/api/bot/start', async (req, res) => {
+  const status = botManager.getStatus();
+  if (status === 'Online' || status === 'Starting') {
+    return res.json({ success: true, message: 'Bot is already running or starting' });
+  }
   botManager.startBot(); // start asynchronously
   res.json({ success: true, message: 'Bot start initiated' });
 });

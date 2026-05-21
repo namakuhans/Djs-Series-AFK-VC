@@ -4,13 +4,15 @@ const getObfuscatedRPC = require('./enc/rpc');
 const security = require('./enc/security');
 
 let botClient = null;
-let botStatus = 'Disconnected'; // 'Online', 'Disconnected', 'Error'
+let botStatus = 'Disconnected'; // 'Starting', 'Online', 'Disconnected', 'Error'
 let hasReportedUsage = false;
 
 async function startBot() {
+  if (botStatus === 'Starting') return { success: false, message: 'Already starting' };
+  botStatus = 'Starting';
   const config = readConfig();
   if (!config.token || !config.guildId || !config.channelId) {
-    botStatus = 'Error';
+    botStatus = 'Disconnected';
     console.error('Config missing required fields (token, guildId, channelId)');
     return { success: false, message: 'Config incomplete' };
   }
