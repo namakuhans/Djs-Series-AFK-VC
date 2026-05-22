@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSelected = config.channelId === channel.id;
             
             const btn = document.createElement('button');
-            btn.className = `w-full text-left p-3 rounded-xl transition-all border flex items-center gap-3 group
+            btn.className = `w-full text-left p-6 rounded-2xl transition-all border flex items-center gap-4 group
                 ${isSelected 
                   ? 'bg-white/20 border-white/40' 
                   : 'bg-white/5 border-transparent hover:border-white/10 hover:bg-white/10'}`;
@@ -584,8 +584,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconClass = isSelected ? 'text-white' : 'text-white/40';
             
             btn.innerHTML = `
-                <i data-lucide="mic" class="w-4 h-4 ${iconClass}"></i>
-                <span class="font-bold text-sm truncate">${channel.name}</span>
+                <div class="p-2 bg-white/5 rounded-lg">
+                    <i data-lucide="mic" class="w-5 h-5 ${iconClass}"></i>
+                </div>
+                <span class="font-bold text-base truncate">${channel.name}</span>
             `;
             
             btn.onclick = () => {
