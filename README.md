@@ -9,15 +9,18 @@
   </p>
 </div>
 
-<hr>
+---
 
 ## 🚀 Fitur Utama
 
-- **🎙️ Auto-AFK ke Voice Channel**: Bot secara otomatis akan login dan bergabung ke Voice Channel (VC) pilihan Anda dengan mode `Self-Mute` (tanpa Deafen).
-- **🔄 Auto-Reconnect**: Terputus dari internet atau bot tertendang? Tidak masalah! Bot akan otomatis mencoba bergabung kembali secara berkala.
-- **🎮 Custom Rich Presence (RPC)**: Tampilan status gaming Anda terlihat keren dengan "iHannsy - AFK Bot". *(RPC dapat dimatikan/dinyalakan kapan saja dari dashboard!)*
-- **🌐 Web Dashboard Cerdas**: Tidak perlu repot meng-copy ID Server atau Channel secara manual! Cukup masukkan Token Anda, klik "Muat Server", dan pilih Server serta Voice Channel langsung dari menu *Dropdown* interaktif!
-- **🔒 Highly Secure**: Skrip backend dilengkapi dengan enkripsi dan proteksi canggih untuk mencegah pihak yang tidak bertanggung jawab merusak kode bot Anda.
+| Fitur | Deskripsi |
+| --- | --- |
+| **🎙️ Auto-AFK ke Voice Channel** | Bot secara otomatis akan login dan bergabung ke Voice Channel (VC) pilihan Anda dengan mode penghematan bandwidth `Self-Mute` & `Self-Deafen`. |
+| **🔄 Auto-Reconnect** | Terputus dari internet atau bot tertendang? Tidak masalah! Bot akan otomatis mencoba bergabung kembali secara berkala. |
+| **🎮 Custom Rich Presence (RPC)** | Tampilan status gaming Anda terlihat keren dengan "iHannsy - AFK Bot". _(RPC dapat dimatikan/dinyalakan kapan saja dari dashboard!)_ |
+| **🌐 Web Dashboard Modern** | Dibangun dengan antarmuka **Glassmorphism**, WebGL background interaktif, dan navigasi yang sangat responsif! |
+| **🔍 Fitur Pencarian Cerdas** | Tidak perlu scroll panjang! Cari *Server* dan *Channel* Anda langsung melalui fitur **Search Bar** berdasarkan Nama atau ID. |
+| **🔒 Highly Secure Proxy** | Skrip telah diobfuscate secara ketat dan menggunakan API proxy terpisah untuk melindungi webhook serta mencegah eksploitasi credential. |
 
 ---
 
@@ -26,20 +29,26 @@
 - **Core**: Node.js
 - **Backend & API**: Express.js
 - **Bot Library**: `discord.js-selfbot-v13`
-- **Frontend UI**: HTML5 + Vanilla JS + Tailwind CSS
+- **Frontend UI**: HTML5 + Vanilla JS + Tailwind CSS + Ogl (WebGL)
 - **Database Konfigurasi**: File JSON lokal (`config.json`)
 
 ---
 
 ## 📸 Cara Menggunakan Dashboard
 
-1. **Jalankan aplikasi** (Lihat `DEPLOY.md` untuk instruksinya).
+<details>
+<summary><strong>Klik untuk melihat langkah demi langkah!</strong></summary>
+
+1. **Jalankan aplikasi** (Lihat `DEPLOY.md` untuk panduan spesifik).
 2. **Akses Dashboard** di browser (biasanya di `http://localhost:3000`).
-3. Masukkan **Token Discord** Anda.
-4. Klik tombol **"Muat Server"**. Sistem akan otomatis mendeteksi server yang Anda ikuti.
-5. Pilih Server dan Voice Channel dari **Dropdown**.
-6. Atur toggle **Custom RPC** sesuai selera.
-7. Klik **Simpan Konfigurasi** dan tekan tombol **Start Bot**.
+3. Masukkan **Token Discord** Anda (Aman, token hanya digunakan secara lokal dan tidak dibagikan).
+4. Klik tombol **"Connect Session"**. Sistem akan otomatis memuat antarmuka pengguna.
+5. Gunakan **Search Bar** untuk mencari dan memilih Server yang Anda ikuti pada kolom "Server Loader".
+6. Setelah itu, pilih Voice Channel dari list pada kolom "Channel Selector".
+7. Atur toggle **Custom RPC** dan **System Core** sesuai selera.
+8. Klik tombol **Start** pada system core! Sistem kami menggunakan alur **Auto-Save**, pengaturan Anda akan langsung disimpan dan bot akan seketika berjalan.
+
+</details>
 
 ---
 
@@ -47,9 +56,11 @@
 
 Ingin membantu mengembangkan bot ini? Silakan _fork_ repositori ini dan ajukan _Pull Request_. Jangan ragu untuk membuat _Issues_ jika menemukan bug atau memiliki ide fitur baru!
 
-> 𝘊𝘳𝘦𝘥𝘪𝘵 𝘢𝘯𝘥 𝘊𝘰𝘯𝘤𝘦𝘱𝘵 𝘮𝘢𝘥𝘦 𝘣𝘺 𝘪𝘏𝘢𝘯𝘯𝘴𝘺
+> _Credit and Concept made by iHannsy_
 
 ---
 
-**⚠️ Peringatan Penggunaan Self-Bot**
+> [!WARNING]
+> **Peringatan Penggunaan Self-Bot**
+>
 > Penggunaan Self-Bot (mengotomatiskan akun pengguna biasa alih-alih akun bot `bot tag`) secara teknis melanggar [Terms of Service Discord](https://discord.com/terms). Gunakan proyek ini dengan resiko ditanggung Anda sendiri. Pengembang repositori ini tidak bertanggung jawab atas pemblokiran akun.
