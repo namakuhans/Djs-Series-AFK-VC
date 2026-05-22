@@ -39,11 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Guilds
     const guildList = document.getElementById('guild-list');
+    const searchGuildInput = document.getElementById('search-guild');
     
     // Channels
     const channelContainer = document.getElementById('channel-container');
     const channelListContainer = document.getElementById('channel-list-container');
     const channelList = document.getElementById('channel-list');
+    const searchChannelInput = document.getElementById('search-channel');
 
     // RPC
     const rpcToggle = document.getElementById('rpc-toggle');
@@ -480,17 +482,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ----------------------------------------------------
+    // SEARCH LISTENERS
+    // ----------------------------------------------------
+    searchGuildInput.addEventListener('input', () => renderGuilds());
+    searchChannelInput.addEventListener('input', () => renderChannels());
+
+    // ----------------------------------------------------
     // RENDER GUILDS
     // ----------------------------------------------------
     function renderGuilds() {
         guildList.innerHTML = '';
         
-        if (state.guilds.length === 0) {
+        const filter = searchGuildInput.value.toLowerCase();
+        const filteredGuilds = state.guilds.filter(guild =>
+            guild.name.toLowerCase().includes(filter) || guild.id.includes(filter)
+        );
+
+        if (filteredGuilds.length === 0) {
             guildList.innerHTML = '<div class="flex h-full items-center justify-center opacity-30 text-sm font-bold uppercase tracking-widest text-center">No Servers Found</div>';
             return;
         }
         
-        state.guilds.forEach(guild => {
+        filteredGuilds.forEach(guild => {
             const isSelected = config.guildId === guild.id;
             
             const btn = document.createElement('button');
@@ -567,12 +580,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderChannels() {
         channelList.innerHTML = '';
         
-        if (state.channels.length === 0) {
+        const filter = searchChannelInput.value.toLowerCase();
+        const filteredChannels = state.channels.filter(channel =>
+            channel.name.toLowerCase().includes(filter) || channel.id.includes(filter)
+        );
+
+        if (filteredChannels.length === 0) {
             channelList.innerHTML = '<div class="flex h-full items-center justify-center opacity-30 text-sm font-bold uppercase tracking-widest text-center py-10">No Voice Channels Found</div>';
             return;
         }
         
-        state.channels.forEach(channel => {
+        filteredChannels.forEach(channel => {
             const isSelected = config.channelId === channel.id;
             
             const btn = document.createElement('button');

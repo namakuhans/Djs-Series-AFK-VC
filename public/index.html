@@ -313,13 +313,19 @@
 
                 <!-- GuildLoader Component -->
                 <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex-1 flex flex-col opacity-0 animate-blur-in min-h-[300px]" style="animation-delay: 150ms;">
-                    <div class="flex items-center gap-2 mb-4 shrink-0">
-                        <div class="p-2 bg-white/10 rounded-lg border border-white/5">
-                            <i data-lucide="server" class="w-5 h-5 text-white/60"></i>
+                    <div class="flex flex-col gap-4 mb-4 shrink-0">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 bg-white/10 rounded-lg border border-white/5">
+                                <i data-lucide="server" class="w-5 h-5 text-white/60"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">Server Loader</h3>
+                                <p class="text-xs text-white/60 font-medium">Select an active guild</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-lg font-bold">Server Loader</h3>
-                            <p class="text-xs text-white/60 font-medium">Select an active guild</p>
+                        <div class="relative">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40"></i>
+                            <input type="text" id="search-guild" placeholder="Search Server by Name or ID..." class="w-full h-9 pl-9 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-white focus:border-white text-xs transition-all">
                         </div>
                     </div>
                     <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 max-h-[370px] scroll-smooth" id="guild-list">
@@ -334,13 +340,19 @@
             <!-- Column 2: Voice Selector -->
             <div class="md:col-span-4 flex flex-col opacity-0 animate-blur-in glass p-6 rounded-3xl" style="animation-delay: 200ms;">
                 <div class="bg-white/5 border border-white/10 p-6 rounded-2xl h-full flex flex-col min-h-[500px]">
-                    <div class="flex items-center gap-2 mb-4 shrink-0">
-                        <div class="p-2 bg-white/10 rounded-lg">
-                            <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+                    <div class="flex flex-col gap-4 mb-4 shrink-0">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 bg-white/10 rounded-lg">
+                                <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">Channel Selector</h3>
+                                <p class="text-xs text-white/60 font-medium">Join a voice channel</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-lg font-bold">Channel Selector</h3>
-                            <p class="text-xs text-white/60 font-medium">Join a voice channel</p>
+                        <div class="relative">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40"></i>
+                            <input type="text" id="search-channel" placeholder="Search Channel by Name or ID..." class="w-full h-9 pl-9 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-white focus:border-white text-xs transition-all">
                         </div>
                     </div>
 
