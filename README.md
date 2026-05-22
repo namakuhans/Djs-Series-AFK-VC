@@ -17,10 +17,8 @@
 | --- | --- |
 | **🎙️ Auto-AFK ke Voice Channel** | Bot secara otomatis akan login dan bergabung ke Voice Channel (VC) pilihan Anda dengan mode penghematan bandwidth `Self-Mute` & `Self-Deafen`. |
 | **🔄 Auto-Reconnect** | Terputus dari internet atau bot tertendang? Tidak masalah! Bot akan otomatis mencoba bergabung kembali secara berkala. |
-| **🎮 Custom Rich Presence (RPC)** | Tampilan status gaming Anda terlihat keren dengan "iHannsy - AFK Bot". _(RPC dapat dimatikan/dinyalakan kapan saja dari dashboard!)_ |
 | **🌐 Web Dashboard Modern** | Dibangun dengan antarmuka **Glassmorphism**, WebGL background interaktif, dan navigasi yang sangat responsif! |
 | **🔍 Fitur Pencarian Cerdas** | Tidak perlu scroll panjang! Cari *Server* dan *Channel* Anda langsung melalui fitur **Search Bar** berdasarkan Nama atau ID. |
-| **🔒 Highly Secure Proxy** | Skrip telah diobfuscate secara ketat dan menggunakan API proxy terpisah untuk melindungi webhook serta mencegah eksploitasi credential. |
 
 ---
 
@@ -45,7 +43,7 @@
 4. Klik tombol **"Connect Session"**. Sistem akan otomatis memuat antarmuka pengguna.
 5. Gunakan **Search Bar** untuk mencari dan memilih Server yang Anda ikuti pada kolom "Server Loader".
 6. Setelah itu, pilih Voice Channel dari list pada kolom "Channel Selector".
-7. Atur toggle **Custom RPC** dan **System Core** sesuai selera.
+7. Atur toggle **System Core** sesuai selera.
 8. Klik tombol **Start** pada system core! Sistem kami menggunakan alur **Auto-Save**, pengaturan Anda akan langsung disimpan dan bot akan seketika berjalan.
 
 </details>
