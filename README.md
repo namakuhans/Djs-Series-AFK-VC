@@ -28,7 +28,6 @@
 - **Backend & API**: Express.js
 - **Bot Library**: `discord.js-selfbot-v13`
 - **Frontend UI**: HTML5 + Vanilla JS + Tailwind CSS + Ogl (WebGL)
-- **Database Konfigurasi**: File JSON lokal (`config.json`)
 
 ---
 
